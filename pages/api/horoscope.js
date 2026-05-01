@@ -64,7 +64,8 @@ export default async function handler(req, res) {
     });
 
     const data = await response.json();
-    const horoscope = data.content?.[0]?.text || "The stars are aligning... please try again.";
+    const raw = data.content?.[0]?.text || "The stars are aligning... please try again.";
+const horoscope = raw.replace(/#{1,6}\s+/g, "").replace(/\*\*(.*?)\*\*/g, "$1").replace(/\*(.*?)\*/g, "$1").replace(/^[-•]\s+/gm, "");
     cache[key] = horoscope;
     res.status(200).json({ horoscope });
   } catch (err) {
