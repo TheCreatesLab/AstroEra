@@ -102,7 +102,10 @@ export default function WeeklyHoroscope() {
                 <div>
                   {horo.split("\n").filter(Boolean).map((p, i) => {
                     if (p.includes("Mantra")) return <div key={i} style={{ background: "linear-gradient(135deg,#FFF0F7,#F5EEFF)", border: "1px solid #E8C8F0", borderLeft: "3px solid #C084FC", borderRadius: "0 12px 12px 0", padding: "14px 18px", fontSize: 14, color: "#7C3AED", fontStyle: "italic", fontWeight: 500, lineHeight: 1.6, marginTop: 8 }}>{p}</div>;
-                    return <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
+                    const isLabel = ["Today's Energy","Love & Connection","Work & Abundance","This Week's Energy","Love & Relationships","Career & Money","Health & Wellbeing","Overall Energy","Career & Ambition","Key Dates to Watch","First Impressions","How Others See You","Your Life Approach","What Your Soul"].some(l => p.startsWith(l));
+return isLabel
+  ? <p key={i} style={{ marginBottom: 6, marginTop: 20, fontSize: 12, color: "#C084FC", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase" }}>{p}</p>
+  : <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
                   })}
                 </div>
               )}

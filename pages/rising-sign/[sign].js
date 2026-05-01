@@ -83,9 +83,12 @@ export default function RisingSign() {
                 </div>
               ) : (
                 <div>
-                  {reading.split("\n").filter(Boolean).map((p, i) => (
-                    <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>
-                  ))}
+                  {reading.split("\n").filter(Boolean).map((p, i) => {
+  const isLabel = ["First Impressions","How Others See You","Your Life Approach","What Your Soul"].some(l => p.startsWith(l));
+  return isLabel
+    ? <p key={i} style={{ marginBottom: 6, marginTop: 20, fontSize: 12, color: "#C084FC", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase" }}>{p}</p>
+    : <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
+})}
                 </div>
               )}
               <div style={{ background: "linear-gradient(135deg,#FFF0F7,#F5EEFF)", border: "1px solid #E8C8F0", borderRadius: 16, padding: 16, marginTop: 20 }}>
