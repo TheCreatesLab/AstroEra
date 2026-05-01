@@ -84,6 +84,7 @@ export default function Home() {
         <meta name="keywords" content="daily horoscope, free horoscope, astrology, zodiac, horoscope today, weekly horoscope, birth chart, compatibility, tarot, mercury retrograde" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href="https://astroera.live/" />
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9847645162809347" crossOrigin="anonymous"></script>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>" />
       </Head>
       <style>{GLOBAL_CSS}</style>
