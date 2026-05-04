@@ -17,12 +17,12 @@ export default function RisingSign() {
   useEffect(() => {
     if (signParam) {
       const found = SIGNS.find(s => s.n.toLowerCase() === signParam.toLowerCase());
-      if (found) fetchReading(found);
+      if (found) { setSign(found); fetchReading(found); }
     }
   }, [signParam]);
 
   const fetchReading = async (s) => {
-    setSign(s); setReading(""); setLoading(true);
+    setReading(""); setLoading(true);
     try {
       const r = await fetch("/api/horoscope", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sign: s.n, type: "rising" }) });
       const d = await r.json();
@@ -32,25 +32,49 @@ export default function RisingSign() {
   };
 
   const signName = sign?.n || (signParam ? signParam.charAt(0).toUpperCase() + signParam.slice(1) : "");
+  const signIdx = SIGNS.findIndex(s => s.n === signName);
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": `${signName} Rising Sign Meaning – ${signName} Ascendant`,
+    "description": `What does ${signName} rising mean? Learn about the ${signName} ascendant — how it shapes your appearance, personality and life approach.`,
+    "datePublished": "2026-05-01",
+    "dateModified": new Date().toISOString().split("T")[0],
+    "author": { "@type": "Organization", "name": "AstroEra", "url": "https://astroera.live" },
+    "publisher": { "@type": "Organization", "name": "AstroEra", "url": "https://astroera.live" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": `https://astroera.live/rising-sign/${signParam}` }
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      { "@type": "Question", "name": `What does ${signName} rising mean?`, "acceptedAnswer": { "@type": "Answer", "text": `${signName} rising (also called ${signName} ascendant) is the zodiac sign that was rising on the eastern horizon at the time of your birth. It shapes how others perceive you and your natural approach to life.` } },
+      { "@type": "Question", "name": `How do I find my rising sign?`, "acceptedAnswer": { "@type": "Answer", "text": `Your rising sign is determined by your exact birth time and location. You need your birth certificate for the exact time. Book a birth chart reading at AstroEra for a full personalised analysis.` } },
+    ]
+  };
 
   return (
     <>
       <Head>
         <title>{signName} Rising Sign Meaning – {signName} Ascendant | AstroEra</title>
-        <meta name="description" content={`What does ${signName} rising mean? Learn about the ${signName} ascendant — how it shapes your appearance, personality and life approach.`} />
-        <meta name="keywords" content={`${signName} rising, ${signName} ascendant, what is ${signName} rising, ${signName} rising meaning, rising sign ${signName}`} />
+        <meta name="description" content={`What does ${signName} rising mean? Learn about the ${signName} ascendant — how it shapes your appearance, personality and life approach. Free rising sign guide.`} />
+        <meta name="keywords" content={`${signName} rising, ${signName} ascendant, what is ${signName} rising, ${signName} rising meaning, rising sign ${signName}, ${signName} ascendant meaning`} />
+        <meta property="og:title" content={`${signName} Rising Sign – What It Means`} />
+        <meta property="og:url" content={`https://astroera.live/rising-sign/${signParam}`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href={`https://astroera.live/rising-sign/${signParam}`} />
+        <link rel="canonical" href={`https://astroera.live/rising-sign/${signParam?.toLowerCase()}`} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       </Head>
       <style>{GLOBAL_CSS}</style>
       <Nav onBook={() => setModal(true)} />
 
       <section style={{ background: "linear-gradient(160deg,#FFF5F0,#FFF0F8,#F5EEFF)", padding: "48px 20px 32px", textAlign: "center", width: "100%" }}>
         <span style={{ fontSize: 11, color: "#FF6CAB", letterSpacing: 2, textTransform: "uppercase", fontWeight: 600 }}>Rising Sign</span>
-        <h1 style={{ fontFamily: "'Rozha One',serif", fontSize: "clamp(28px,6vw,52px)", color: "#1A0530", margin: "10px 0 8px", lineHeight: 1.1 }}>
-          {signName} Rising
-        </h1>
-        <p style={{ fontSize: 14, color: "#9A7AAA", fontWeight: 300, maxWidth: 480, margin: "0 auto" }}>Your rising sign (ascendant) is how the world sees you — often more powerful than your sun sign</p>
+        <h1 style={{ fontFamily: "'Rozha One',serif", fontSize: "clamp(28px,6vw,52px)", color: "#1A0530", margin: "10px 0 8px", lineHeight: 1.1 }}>{signName} Rising</h1>
+        <p style={{ fontSize: 14, color: "#9A7AAA", fontWeight: 300, maxWidth: 480, margin: "0 auto" }}>Your rising sign is how the world sees you — often more powerful than your sun sign</p>
       </section>
 
       <div style={{ background: "#fff", borderBottom: "1px solid #F0E8F4", padding: "12px 20px", width: "100%" }}>
@@ -67,10 +91,10 @@ export default function RisingSign() {
       <section style={{ background: "#FFFAF5", padding: "40px 20px", width: "100%" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           {sign && (
-            <div style={{ background: "#fff", border: "1.5px solid #F0E0EC", borderRadius: 24, padding: "clamp(20px,5vw,40px)", animation: "fadeUp .4s ease", position: "relative", overflow: "hidden", boxShadow: "0 8px 40px rgba(192,132,252,.07)" }}>
+            <div style={{ background: "#fff", border: "1.5px solid #F0E0EC", borderRadius: 24, padding: "clamp(20px,5vw,40px)", animation: "fadeUp .4s ease", position: "relative", overflow: "hidden", boxShadow: "0 8px 40px rgba(192,132,252,.07)", marginBottom: 24 }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#FF6CAB,#C084FC,#FF9F7F)" }} />
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: SIGN_COLORS[SIGNS.findIndex(s => s.n === sign.n)], display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>{sign.s}</div>
+                <div style={{ width: 56, height: 56, borderRadius: 16, background: signIdx >= 0 ? SIGN_COLORS[signIdx] : "#FFE4E1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>{sign.s}</div>
                 <div>
                   <div style={{ fontFamily: "'Rozha One',serif", fontSize: 24, color: "#1A0530" }}>{sign.n} Rising</div>
                   <div style={{ fontSize: 12, color: "#9A7AAA", marginTop: 3, fontWeight: 300 }}>The {sign.n} Ascendant</div>
@@ -84,22 +108,37 @@ export default function RisingSign() {
               ) : (
                 <div>
                   {reading.split("\n").filter(Boolean).map((p, i) => {
-  const isLabel = ["First Impressions","How Others See You","Your Life Approach","What Your Soul"].some(l => p.startsWith(l));
-  return isLabel
-    ? <p key={i} style={{ marginBottom: 6, marginTop: 20, fontSize: 12, color: "#C084FC", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase" }}>{p}</p>
-    : <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
-})}
+                    const isLabel = ["First Impressions","How Others See You","Your Life Approach","What Your Soul"].some(l => p.startsWith(l) && p.length < 50);
+                    if (isLabel) return <span key={i} style={{ display: "block", fontSize: 10, color: "#C084FC", fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase", marginBottom: 5, marginTop: i > 0 ? 16 : 0 }}>{p}</span>;
+                    return <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
+                  })}
                 </div>
               )}
               <div style={{ background: "linear-gradient(135deg,#FFF0F7,#F5EEFF)", border: "1px solid #E8C8F0", borderRadius: 16, padding: 16, marginTop: 20 }}>
                 <p style={{ fontSize: 13, color: "#7C3AED", fontWeight: 500, marginBottom: 8 }}>✦ Don't know your rising sign?</p>
-                <p style={{ fontSize: 13, color: "#5A3A7A", fontWeight: 300, marginBottom: 12 }}>Your rising sign is determined by your exact birth time and location. Book a personalised birth chart reading to discover your ascendant and all your planetary placements.</p>
+                <p style={{ fontSize: 13, color: "#5A3A7A", fontWeight: 300, marginBottom: 12 }}>Your rising sign is determined by your exact birth time and location. Book a personalised birth chart reading to discover your ascendant.</p>
                 <button onClick={() => setModal(true)} style={{ background: GRAD, color: "#fff", border: "none", borderRadius: 100, padding: "10px 20px", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Poppins',sans-serif" }}>Find my rising sign — $29</button>
               </div>
             </div>
           )}
 
-          <div style={{ marginTop: 40 }}>
+          {/* FAQ */}
+          {sign && (
+            <div style={{ background: "#fff", border: "1.5px solid #F0E8F4", borderRadius: 20, padding: 24, marginBottom: 24 }}>
+              <h2 style={{ fontFamily: "'Rozha One',serif", fontSize: 20, color: "#1A0530", marginBottom: 16 }}>Frequently Asked</h2>
+              {[
+                { q: `What does ${signName} rising mean?`, a: `${signName} rising means ${signName} was the zodiac sign on the eastern horizon when you were born. It shapes your outer personality, appearance, and the first impression you make on others.` },
+                { q: `How do I find my rising sign?`, a: `You need your exact birth time and location to calculate your rising sign. A birth certificate is the most reliable source. Book a full birth chart reading at AstroEra and we'll calculate all your placements.` },
+              ].map((item, i) => (
+                <div key={i} style={{ borderBottom: i < 1 ? "1px solid #F5EEF0" : "none", paddingBottom: i < 1 ? 16 : 0, marginBottom: i < 1 ? 16 : 0 }}>
+                  <h3 style={{ fontSize: 14, fontWeight: 600, color: "#1A0530", marginBottom: 6 }}>{item.q}</h3>
+                  <p style={{ fontSize: 13, color: "#5A3A7A", lineHeight: 1.7, fontWeight: 300 }}>{item.a}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div>
             <h2 style={{ fontFamily: "'Rozha One',serif", fontSize: 22, color: "#1A0530", marginBottom: 16 }}>All Rising Signs</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10 }}>
               {SIGNS.map((sg, i) => (

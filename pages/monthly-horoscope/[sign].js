@@ -18,12 +18,12 @@ export default function MonthlyHoroscope() {
   useEffect(() => {
     if (signParam) {
       const found = SIGNS.find(s => s.n.toLowerCase() === signParam.toLowerCase());
-      if (found) fetchReading(found);
+      if (found) { setSign(found); fetchReading(found); }
     }
   }, [signParam]);
 
   const fetchReading = async (s) => {
-    setSign(s); setHoro(""); setLoading(true);
+    setHoro(""); setLoading(true);
     try {
       const r = await fetch("/api/horoscope", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ sign: s.n, type: "monthly" }) });
       const d = await r.json();
@@ -33,26 +33,40 @@ export default function MonthlyHoroscope() {
   };
 
   const signName = sign?.n || (signParam ? signParam.charAt(0).toUpperCase() + signParam.slice(1) : "");
+  const signIdx = SIGNS.findIndex(s => s.n === signName);
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": `${signName} Monthly Horoscope ${monthName}`,
+    "description": `Read your free ${signName} monthly horoscope for ${monthName}. Love, career, health and cosmic guidance from AstroEra.`,
+    "datePublished": new Date().toISOString().split("T")[0],
+    "dateModified": new Date().toISOString().split("T")[0],
+    "author": { "@type": "Organization", "name": "AstroEra", "url": "https://astroera.live" },
+    "publisher": { "@type": "Organization", "name": "AstroEra", "url": "https://astroera.live" },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": `https://astroera.live/monthly-horoscope/${signParam}` }
+  };
 
   return (
     <>
       <Head>
         <title>{signName} Monthly Horoscope {monthName} | AstroEra</title>
         <meta name="description" content={`Read your free ${signName} monthly horoscope for ${monthName}. Love, career, health and cosmic guidance from AstroEra's professional astrologers.`} />
-        <meta name="keywords" content={`${signName} monthly horoscope, ${signName} horoscope ${monthName}, monthly horoscope ${signName}, ${signName} astrology ${monthName}`} />
+        <meta name="keywords" content={`${signName} monthly horoscope, ${signName} horoscope ${monthName}, monthly horoscope ${signName}, ${signName} astrology ${monthName}, ${signName} love monthly`} />
+        <meta property="og:title" content={`${signName} Monthly Horoscope ${monthName}`} />
+        <meta property="og:url" content={`https://astroera.live/monthly-horoscope/${signParam}`} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="canonical" href={`https://astroera.live/monthly-horoscope/${signParam}`} />
+        <link rel="canonical" href={`https://astroera.live/monthly-horoscope/${signParam?.toLowerCase()}`} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       </Head>
       <style>{GLOBAL_CSS}</style>
       <Nav onBook={() => setModal(true)} />
 
       <section style={{ background: "linear-gradient(160deg,#FFF5F0,#FFF0F8,#F5EEFF)", padding: "48px 20px 32px", textAlign: "center", width: "100%" }}>
         <span style={{ fontSize: 11, color: "#FF6CAB", letterSpacing: 2, textTransform: "uppercase", fontWeight: 600 }}>Monthly Horoscope</span>
-        <h1 style={{ fontFamily: "'Rozha One',serif", fontSize: "clamp(28px,6vw,52px)", color: "#1A0530", margin: "10px 0 8px", lineHeight: 1.1 }}>
-          {signName} Horoscope {monthName}
-        </h1>
+        <h1 style={{ fontFamily: "'Rozha One',serif", fontSize: "clamp(28px,6vw,52px)", color: "#1A0530", margin: "10px 0 8px", lineHeight: 1.1 }}>{signName} Horoscope {monthName}</h1>
         <p style={{ fontSize: 14, color: "#9A7AAA", fontWeight: 300 }}>Your complete cosmic forecast for the month</p>
-        <div style={{ display: "flex", gap: 12, justifyContent: "center", margin: "16px 0 0", flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", margin: "16px 0 0", flexWrap: "wrap" }}>
           {[["Daily", `/daily-horoscope/${signParam}`], ["Weekly", `/weekly-horoscope/${signParam}`], ["Rising Sign", `/rising-sign/${signParam}`]].map(([label, href]) => (
             <Link key={label} href={href} style={{ background: "#fff", color: "#C084FC", border: "1.5px solid #E8C8F0", borderRadius: 100, padding: "7px 18px", fontSize: 12, fontWeight: 500, textDecoration: "none" }}>{label} →</Link>
           ))}
@@ -73,10 +87,10 @@ export default function MonthlyHoroscope() {
       <section style={{ background: "#FFFAF5", padding: "40px 20px", width: "100%" }}>
         <div style={{ maxWidth: 680, margin: "0 auto" }}>
           {sign && (
-            <div style={{ background: "#fff", border: "1.5px solid #F0E0EC", borderRadius: 24, padding: "clamp(20px,5vw,40px)", animation: "fadeUp .4s ease", position: "relative", overflow: "hidden", boxShadow: "0 8px 40px rgba(192,132,252,.07)" }}>
+            <div style={{ background: "#fff", border: "1.5px solid #F0E0EC", borderRadius: 24, padding: "clamp(20px,5vw,40px)", animation: "fadeUp .4s ease", position: "relative", overflow: "hidden", boxShadow: "0 8px 40px rgba(192,132,252,.07)", marginBottom: 32 }}>
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: "linear-gradient(90deg,#FF6CAB,#C084FC,#FF9F7F)" }} />
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 24 }}>
-                <div style={{ width: 56, height: 56, borderRadius: 16, background: SIGN_COLORS[SIGNS.findIndex(s => s.n === sign.n)], display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>{sign.s}</div>
+                <div style={{ width: 56, height: 56, borderRadius: 16, background: signIdx >= 0 ? SIGN_COLORS[signIdx] : "#FFE4E1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, flexShrink: 0 }}>{sign.s}</div>
                 <div>
                   <div style={{ fontFamily: "'Rozha One',serif", fontSize: 24, color: "#1A0530" }}>{sign.n} Monthly Horoscope</div>
                   <div style={{ fontSize: 12, color: "#9A7AAA", marginTop: 3, fontWeight: 300 }}>{monthName}</div>
@@ -91,17 +105,16 @@ export default function MonthlyHoroscope() {
                 <div>
                   {horo.split("\n").filter(Boolean).map((p, i) => {
                     if (p.includes("Mantra")) return <div key={i} style={{ background: "linear-gradient(135deg,#FFF0F7,#F5EEFF)", border: "1px solid #E8C8F0", borderLeft: "3px solid #C084FC", borderRadius: "0 12px 12px 0", padding: "14px 18px", fontSize: 14, color: "#7C3AED", fontStyle: "italic", fontWeight: 500, lineHeight: 1.6, marginTop: 8 }}>{p}</div>;
-                    const isLabel = ["Today's Energy","Love & Connection","Work & Abundance","This Week's Energy","Love & Relationships","Career & Money","Health & Wellbeing","Overall Energy","Career & Ambition","Key Dates to Watch","First Impressions","How Others See You","Your Life Approach","What Your Soul"].some(l => p.startsWith(l));
-return isLabel
-  ? <p key={i} style={{ marginBottom: 6, marginTop: 20, fontSize: 12, color: "#C084FC", fontWeight: 600, letterSpacing: "2px", textTransform: "uppercase" }}>{p}</p>
-  : <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
+                    const isLabel = ["Overall Energy","Love & Relationships","Career & Ambition","Health & Wellbeing","Key Dates"].some(l => p.startsWith(l) && p.length < 40);
+                    if (isLabel) return <span key={i} style={{ display: "block", fontSize: 10, color: "#C084FC", fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase", marginBottom: 5, marginTop: i > 0 ? 16 : 0 }}>{p}</span>;
+                    return <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
                   })}
                 </div>
               )}
               <button onClick={() => setModal(true)} style={{ background: GRAD, color: "#fff", border: "none", borderRadius: 100, padding: "11px 22px", fontSize: 13, fontWeight: 600, cursor: "pointer", fontFamily: "'Poppins',sans-serif", marginTop: 24 }}>Get my full birth chart — $29</button>
             </div>
           )}
-          <div style={{ marginTop: 40 }}>
+          <div style={{ marginTop: 16 }}>
             <h2 style={{ fontFamily: "'Rozha One',serif", fontSize: 22, color: "#1A0530", marginBottom: 16 }}>All Monthly Horoscopes</h2>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10 }}>
               {SIGNS.map((sg, i) => (
