@@ -332,7 +332,9 @@ export default function Home() {
             </div>
             <div>
               <div style={{ fontSize: 10, color: "#3D1F5C", letterSpacing: 2, textTransform: "uppercase", marginBottom: 12, fontWeight: 600 }}>Company</div>
-              {["About","Privacy Policy","Terms","Affiliate Disclosure"].map(l => <span key={l} style={{ fontSize: 12, color: "#7A5A8A", display: "block", marginBottom: 7, cursor: "pointer", fontWeight: 300 }}>{l}</span>)}
+             {[["About","/about"],["Privacy Policy","/privacy-policy"],["Terms","/terms"],["Affiliate Disclosure","/affiliate-disclosure"]].map(([label,href]) => (
+  <Link key={label} href={href} style={{ fontSize: 12, color: "#7A5A8A", display: "block", marginBottom: 7, fontWeight: 300, textDecoration: "none" }}>{label}</Link>
+))}
             </div>
           </div>
           <div style={{ borderTop: "1px solid #2A1040", paddingTop: 18, display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
