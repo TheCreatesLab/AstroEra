@@ -65,8 +65,22 @@ export default function Home() {
     if (!horo) return null;
     const paras = horo.split("\n").filter(Boolean);
     let li = 0;
+    const renderHoro = () => {
+    if (!horo) return null;
+    const paras = horo.split("\n").filter(Boolean);
+    let li = 0;
     return paras.map((p, i) => {
-      if (p.startsWith("Today's Mantra")) {
+      if (p.includes("Mantra")) {
+        return <div key={i} style={{ background: "linear-gradient(135deg,#FFF0F7,#F5EEFF)", border: "1px solid #E8C8F0", borderLeft: "3px solid #C084FC", borderRadius: "0 12px 12px 0", padding: "14px 18px", fontSize: 14, color: "#7C3AED", fontStyle: "italic", fontWeight: 500, lineHeight: 1.6, marginTop: 8 }}>{p}</div>;
+      }
+      const isLabel = ["Today's Energy","Love & Connection","Work & Abundance"].some(l => p.startsWith(l) && p.length < 40);
+      if (isLabel) {
+        return <span key={i} style={{ display: "block", fontSize: 10, color: "#C084FC", fontWeight: 600, letterSpacing: "2.5px", textTransform: "uppercase", marginBottom: 5, marginTop: i > 0 ? 16 : 0 }}>{p}</span>;
+      }
+      li++;
+      return <p key={i} style={{ marginBottom: 14, fontSize: 15, color: "#3D1F5C", lineHeight: 1.85, fontWeight: 300 }}>{p}</p>;
+    });
+  };
         return <div key={i} style={{ background: "linear-gradient(135deg,#FFF0F7,#F5EEFF)", border: "1px solid #E8C8F0", borderLeft: "3px solid #C084FC", borderRadius: "0 12px 12px 0", padding: "14px 18px", fontSize: 14, color: "#7C3AED", fontStyle: "italic", fontWeight: 500, lineHeight: 1.6, marginTop: 8 }}>{p}</div>;
       }
       const isLabel = ["Today's Energy","Love & Connection","Work & Abundance","Today's Horoscope","Love &","Work &"].some(l => p.startsWith(l) && p.length < 40);
