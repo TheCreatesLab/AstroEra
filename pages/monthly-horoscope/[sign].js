@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Nav from "../../components/Nav";
 import BookingModal from "../../components/BookingModal";
 import { SIGNS, SIGN_COLORS, GRAD, GLOBAL_CSS } from "../../lib/constants";
@@ -10,9 +9,7 @@ import { SIGNS, SIGN_COLORS, GRAD, GLOBAL_CSS } from "../../lib/constants";
 const MONTH_NAME = new Date().toLocaleDateString("en-US", { month:"long", year:"numeric" });
 const TODAY_ISO = new Date().toISOString().split("T")[0];
 
-export default function MonthlyHoroscope() {
-  const router = useRouter();
-  const { sign: signParam } = router.query;
+export default function MonthlyHoroscope({ signParam }) {
   const [sign, setSign] = useState(null);
   const [horo, setHoro] = useState("");
   const [loading, setLoading] = useState(false);
@@ -139,4 +136,22 @@ export default function MonthlyHoroscope() {
       <BookingModal open={modal} onClose={() => setModal(false)} />
     </>
   );
+}
+
+// ✅ SEO FIX: Pre-render all 12 sign pages at build time
+const ALL_SIGNS = ["aries","taurus","gemini","cancer","leo","virgo",
+  "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+
+export async function getStaticPaths() {
+  return {
+    paths: ALL_SIGNS.map(sign => ({ params: { sign } })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  return {
+    props: { signParam: params.sign },
+    revalidate: 86400, // Rebuild once per day
+  };
 }

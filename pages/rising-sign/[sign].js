@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Nav from "../../components/Nav";
 import BookingModal from "../../components/BookingModal";
 import { SIGNS, SIGN_COLORS, GRAD, GLOBAL_CSS } from "../../lib/constants";
 
-export default function RisingSign() {
-  const router = useRouter();
-  const { sign: signParam } = router.query;
+export default function RisingSign({ signParam }) {
   const [sign, setSign] = useState(null);
   const [reading, setReading] = useState("");
   const [loading, setLoading] = useState(false);
@@ -122,7 +119,6 @@ export default function RisingSign() {
             </div>
           )}
 
-          {/* FAQ */}
           {sign && (
             <div style={{ background: "#fff", border: "1.5px solid #F0E8F4", borderRadius: 20, padding: 24, marginBottom: 24 }}>
               <h2 style={{ fontFamily: "'Rozha One',serif", fontSize: 20, color: "#1A0530", marginBottom: 16 }}>Frequently Asked</h2>
@@ -160,4 +156,22 @@ export default function RisingSign() {
       <BookingModal open={modal} onClose={() => setModal(false)} />
     </>
   );
+}
+
+// ✅ SEO FIX: Pre-render all 12 sign pages at build time
+const ALL_SIGNS = ["aries","taurus","gemini","cancer","leo","virgo",
+  "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+
+export async function getStaticPaths() {
+  return {
+    paths: ALL_SIGNS.map(sign => ({ params: { sign } })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  return {
+    props: { signParam: params.sign },
+    revalidate: 86400, // Rebuild once per day
+  };
 }
