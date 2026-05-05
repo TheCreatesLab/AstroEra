@@ -10,13 +10,12 @@ function getWeekRange() {
   const now = new Date();
   const day = now.getDay();
   const sunday = new Date(now);
-  sunday.setDate(now.getDate() - day + (day === 0 ? 0 : 7));
+  sunday.setDate(now.getDate() - day);
   const saturday = new Date(sunday);
   saturday.setDate(sunday.getDate() + 6);
   const fmt = (d) => d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   return `${fmt(sunday)} – ${fmt(saturday)}`;
 }
-
 export default function WeeklyHoroscope() {
   const router = useRouter();
   const { sign: signParam } = router.query;

@@ -35,7 +35,10 @@ export default function DailyHoroscope() {
     setLoading(false);
   };
 
-  const today = new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  const [today, setToday] = useState("");
+useEffect(() => {
+  setToday(new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }));
+}, []);
   const todayISO = new Date().toISOString().split("T")[0];
   const signName = sign?.n || (signParam ? signParam.charAt(0).toUpperCase() + signParam.slice(1) : "");
   const signIdx = SIGNS.findIndex(s => s.n === signName);
