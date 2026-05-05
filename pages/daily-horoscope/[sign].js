@@ -14,9 +14,8 @@ const LUCKY_NUMBERS = { Aries:"1, 9",Taurus:"2, 6",Gemini:"3, 12",Cancer:"4, 7",
 const TODAY_ISO = new Date().toISOString().split("T")[0];
 const TODAY_DISPLAY = new Date().toLocaleDateString("en-US", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
 
-export default function DailyHoroscope() {
+export default function DailyHoroscope({ signParam }) {
   const router = useRouter();
-  const { sign: signParam } = router.query;
   const [sign, setSign] = useState(null);
   const [horo, setHoro] = useState("");
   const [loading, setLoading] = useState(false);
@@ -189,4 +188,19 @@ export default function DailyHoroscope() {
       <BookingModal open={modal} onClose={() => setModal(false)} />
     </>
   );
+}
+export async function getStaticPaths() {
+  const signs = ["aries","taurus","gemini","cancer","leo","virgo",
+    "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+  return {
+    paths: signs.map(sign => ({ params: { sign } })),
+    fallback: false,
+  };
+}
+
+export async function getStaticProps({ params }) {
+  return {
+    props: { signParam: params.sign },
+    revalidate: 86400,
+  };
 }
