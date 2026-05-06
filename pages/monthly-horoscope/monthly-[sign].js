@@ -5,7 +5,6 @@ import Nav from "../../components/Nav";
 import BookingModal from "../../components/BookingModal";
 import { SIGNS, SIGN_COLORS, GRAD, GLOBAL_CSS } from "../../lib/constants";
 
-// Calculated outside component — no hydration mismatch
 const MONTH_NAME = new Date().toLocaleDateString("en-US", { month:"long", year:"numeric" });
 const TODAY_ISO = new Date().toISOString().split("T")[0];
 
@@ -50,7 +49,7 @@ export default function MonthlyHoroscope({ signParam }) {
   return (
     <>
       <Head>
-        <title>{signName} Monthly Horoscope {MONTH_NAME} | AstroEra</title>
+        <title>{`${signName} Monthly Horoscope ${MONTH_NAME} | AstroEra`}</title>
         <meta name="description" content={`Read your free ${signName} monthly horoscope for ${MONTH_NAME}. Love, career, health and cosmic guidance from AstroEra's professional astrologers.`} />
         <meta name="keywords" content={`${signName} monthly horoscope, ${signName} horoscope ${MONTH_NAME}, monthly horoscope ${signName}, ${signName} astrology ${MONTH_NAME}`} />
         <meta property="og:title" content={`${signName} Monthly Horoscope ${MONTH_NAME}`} />
@@ -138,7 +137,6 @@ export default function MonthlyHoroscope({ signParam }) {
   );
 }
 
-// ✅ SEO FIX: Pre-render all 12 sign pages at build time
 const ALL_SIGNS = ["aries","taurus","gemini","cancer","leo","virgo",
   "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
 
@@ -152,6 +150,6 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   return {
     props: { signParam: params.sign },
-    revalidate: 86400, // Rebuild once per day
+    revalidate: 86400,
   };
 }

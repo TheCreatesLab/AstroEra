@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import Nav from "../../components/Nav";
 import BookingModal from "../../components/BookingModal";
 import { SIGNS, SIGN_COLORS, GRAD, GLOBAL_CSS } from "../../lib/constants";
@@ -10,12 +9,10 @@ const SIGN_ELEMENTS = { Aries:"Fire",Taurus:"Earth",Gemini:"Air",Cancer:"Water",
 const SIGN_RULERS = { Aries:"Mars",Taurus:"Venus",Gemini:"Mercury",Cancer:"Moon",Leo:"Sun",Virgo:"Mercury",Libra:"Venus",Scorpio:"Pluto",Sagittarius:"Jupiter",Capricorn:"Saturn",Aquarius:"Uranus",Pisces:"Neptune" };
 const LUCKY_NUMBERS = { Aries:"1, 9",Taurus:"2, 6",Gemini:"3, 12",Cancer:"4, 7",Leo:"1, 5",Virgo:"5, 14",Libra:"6, 15",Scorpio:"8, 11",Sagittarius:"3, 9",Capricorn:"8, 10",Aquarius:"4, 7",Pisces:"3, 7" };
 
-// Calculated outside component — no hydration mismatch
 const TODAY_ISO = new Date().toISOString().split("T")[0];
 const TODAY_DISPLAY = new Date().toLocaleDateString("en-US", { weekday:"long", year:"numeric", month:"long", day:"numeric" });
 
 export default function DailyHoroscope({ signParam }) {
-  const router = useRouter();
   const [sign, setSign] = useState(null);
   const [horo, setHoro] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,7 +63,7 @@ export default function DailyHoroscope({ signParam }) {
   return (
     <>
       <Head>
-        <title>{signName} Horoscope Today – {TODAY_DISPLAY} | AstroEra</title>
+        <title>{`${signName} Horoscope Today – ${TODAY_DISPLAY} | AstroEra`}</title>
         <meta name="description" content={`Read your free ${signName} daily horoscope for ${TODAY_DISPLAY}. Love, career and cosmic guidance from AstroEra's professional astrologers. Updated daily.`} />
         <meta name="keywords" content={`${signName} horoscope today, ${signName} daily horoscope, ${signName} astrology today, daily horoscope ${signName}, free horoscope ${signName}`} />
         <meta property="og:title" content={`${signName} Horoscope Today – ${TODAY_DISPLAY}`} />
@@ -189,11 +186,13 @@ export default function DailyHoroscope({ signParam }) {
     </>
   );
 }
+
+const ALL_SIGNS = ["aries","taurus","gemini","cancer","leo","virgo",
+  "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
+
 export async function getStaticPaths() {
-  const signs = ["aries","taurus","gemini","cancer","leo","virgo",
-    "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
   return {
-    paths: signs.map(sign => ({ params: { sign } })),
+    paths: ALL_SIGNS.map(sign => ({ params: { sign } })),
     fallback: false,
   };
 }

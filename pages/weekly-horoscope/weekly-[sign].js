@@ -5,7 +5,6 @@ import Nav from "../../components/Nav";
 import BookingModal from "../../components/BookingModal";
 import { SIGNS, SIGN_COLORS, GRAD, GLOBAL_CSS } from "../../lib/constants";
 
-// Fixed week range — Sunday to Saturday of CURRENT week
 function getWeekRange() {
   const now = new Date();
   const day = now.getDay();
@@ -61,7 +60,7 @@ export default function WeeklyHoroscope({ signParam }) {
   return (
     <>
       <Head>
-        <title>{signName} Weekly Horoscope – {WEEK_RANGE} | AstroEra</title>
+        <title>{`${signName} Weekly Horoscope – ${WEEK_RANGE} | AstroEra`}</title>
         <meta name="description" content={`Read your free ${signName} weekly horoscope for ${WEEK_RANGE}. Love, career, health and cosmic guidance from AstroEra's professional astrologers.`} />
         <meta name="keywords" content={`${signName} weekly horoscope, ${signName} horoscope this week, weekly horoscope ${signName}, ${signName} astrology this week`} />
         <meta property="og:title" content={`${signName} Weekly Horoscope – ${WEEK_RANGE}`} />
@@ -149,7 +148,6 @@ export default function WeeklyHoroscope({ signParam }) {
   );
 }
 
-// ✅ SEO FIX: Pre-render all 12 sign pages at build time
 const ALL_SIGNS = ["aries","taurus","gemini","cancer","leo","virgo",
   "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
 
@@ -163,6 +161,6 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   return {
     props: { signParam: params.sign },
-    revalidate: 86400, // Rebuild once per day
+    revalidate: 86400,
   };
 }

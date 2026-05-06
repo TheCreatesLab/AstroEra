@@ -55,7 +55,7 @@ export default function RisingSign({ signParam }) {
   return (
     <>
       <Head>
-        <title>{signName} Rising Sign Meaning – {signName} Ascendant | AstroEra</title>
+        <title>{`${signName} Rising Sign Meaning – ${signName} Ascendant | AstroEra`}</title>
         <meta name="description" content={`What does ${signName} rising mean? Learn about the ${signName} ascendant — how it shapes your appearance, personality and life approach. Free rising sign guide.`} />
         <meta name="keywords" content={`${signName} rising, ${signName} ascendant, what is ${signName} rising, ${signName} rising meaning, rising sign ${signName}, ${signName} ascendant meaning`} />
         <meta property="og:title" content={`${signName} Rising Sign – What It Means`} />
@@ -158,7 +158,6 @@ export default function RisingSign({ signParam }) {
   );
 }
 
-// ✅ SEO FIX: Pre-render all 12 sign pages at build time
 const ALL_SIGNS = ["aries","taurus","gemini","cancer","leo","virgo",
   "libra","scorpio","sagittarius","capricorn","aquarius","pisces"];
 
@@ -172,6 +171,6 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   return {
     props: { signParam: params.sign },
-    revalidate: 86400, // Rebuild once per day
+    revalidate: 86400,
   };
 }
